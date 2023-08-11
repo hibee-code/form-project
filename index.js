@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
+import routes from "./routes/index.js";
 
 
 const app = express();
@@ -8,20 +9,18 @@ const port = 3000;
 
 app.use(bodyParser.urlencoded({extended: true}))
 
-app.get("/", (req,res) => {
-    res.render("index.ejs");
-})
+app.use('/', routes);
 
-app.post("/submit", (req,res) => {
-    const firstName = req.body['Fname'].length;
-    const lastName = req.body['Lname'].length;
 
-    const numOfLetters = firstName + lastName;
-    res.render("index.ejs", {letterNum: numOfLetters});
-})
 
-app.listen(port, () => {
+
+
+
+
+const URI_CONNECTION = "mongodb+srv://formMogodb:octoib917@cluster0.joxnwbu.mongodb.net/NODE_form?retryWrites=true&w=majority"
+mongoose.connect(URI_CONNECTION, { useNewUrlParser:true, useUnifiedTopology: true })
+
+.then(() => app.listen(port, () => {
     console.log(`server running on port ${port}`)
-});
-
-mongoose.connect()
+}))
+.catch((err) => console.error(err));
